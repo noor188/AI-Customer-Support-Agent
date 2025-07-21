@@ -78,6 +78,9 @@ pnpm dev
 
 Open your browser and go to http://localhost:3000
 
+## Demo
+<a href="https://youtu.be/-NCpDcE0UYs"> Youtube Video</a>
+
 ## 🧠 Future Improvements
 - Preprocess and clean scraped content
 
