@@ -2,8 +2,20 @@ import { NextRequest, NextResponse } from "next/server";
 import { Logger } from "@/utils/logger";
 import OpenAI from "openai";
 import { env } from "@/config/env";
+import { Pinecone } from "@pinecone-database/pinecone";
+import { GoogleGenerativeAI } from "@google/generative-ai";
+import { context } from "@pinecone-database/pinecone/dist/assistant/data/context";
+import { log } from "console";
 
 const logger = new Logger("API:Chat");
+
+const pinecone = new Pinecone({
+  apiKey: env.PINECONE_API_KEY,
+});
+
+const namespace = pinecone.index("customer-support").namespace("aven");
+const ai = new GoogleGenerativeAI(env.GOOGLE_API_KEY!);
+const embeddingModel = ai.getGenerativeModel({ model: "gemini-embedding-001" });
 
 const gemini = new OpenAI({
   apiKey: env.GOOGLE_API_KEY,
@@ -17,10 +29,10 @@ export async function POST(req: NextRequest) {
 
   try {
     const body = await req.json();
-    logger.info("Received request body:", {
-      hasMessages: !!body.messages,
-      stream: body.stream,
-    });
+    // logger.info("Received request body:", {
+    //   hasMessages: !!body.messages,
+    //   stream: body.stream,
+    // });
 
     const {
       model,
@@ -50,14 +62,38 @@ export async function POST(req: NextRequest) {
 
     logger.info("Creating prompt modification...");
 
+    const query = lastMessage.content;
+    logger.info("Query for embedding:", query);
+
+    const embedding = await embeddingModel.embedContent(query);
+    logger.info("Embedding:", embedding);
+
+    const response = await namespace.query({
+      vector: embedding.embedding.values,
+      topK: 15,
+      includeMetadata: true,
+      includeValues: false,
+    });
+
+    logger.info("Pinecone query response:", response);
+
+    const context = response.matches
+      ?.map(match => match.metadata?.chunk_text)
+      .join("\n\n");
+
+    const geminiPrompt = `
+    Answer my question based on the following context:
+    ${context}
+    
+    Question: ${query}
+    Answer:`;
     // Create modified prompt
     const prompt = await gemini.chat.completions.create({
       model: "gemini-2.0-flash-lite",
       messages: [
         {
           role: "user",
-          content: `You are an expert customer support agent who knows everything about Aven 
-          answer the user query: ${lastMessage.content}`,
+          content: geminiPrompt,
         },
       ],
       max_tokens: 500,
