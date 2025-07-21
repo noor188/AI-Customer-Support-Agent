@@ -1,40 +1,72 @@
-# Next.js Template
+# AI Customer Support Agent
 
-This is a template repository showcasing Next.js Server Actions, React Server Components, and modern data fetching patterns. The project includes a Todo list implementation and examples of API integration with proper loading states and error handling.
+An intelligent, voice-enabled customer support agent designed to answer questions about [Aven](https://www.aven.com/), a modern fintech startup.
 
-## Features
+## ✨ Features
 
-- **Todo List**: Server-side data mutations using Next.js Server Actions
-- **Data Fetching Example**: Demonstrates React Suspense and loading states
-- **Modern UI**: Built with Shadcn UI components and Tailwind CSS
-- **Error Handling**: Proper error boundaries and user feedback
-- **Type Safety**: Full TypeScript support
+- **Web Scraping**  
+  Utilizes the [FireCrawl](https://www.firecrawl.dev/) API to extract real-time content about Aven from the web.
 
-## Tech Stack
+- **Vector Database with Pinecone**  
+  Stores vector embeddings using the [Pinecone](https://www.pinecone.io/) API for efficient similarity search.
 
-- [Next.js](https://nextjs.org) - React framework
-- [Shadcn UI](https://ui.shadcn.com/) - Component library
-- [Tailwind CSS](https://tailwindcss.com) - Styling
-- [TypeScript](https://www.typescriptlang.org/) - Type safety
+- **Voice Integration with Vapi**  
+  Incorporates [Vapi](https://vapi.ai/) to enable natural voice conversations via a backend voice AI agent.
 
-## Getting Started
+- **RAG (Retrieval-Augmented Generation)**  
+  Enhances response accuracy by retrieving relevant context from Pinecone before generating answers.  
+  Based on [Retrieval-Augmented Generation](https://aws.amazon.com/what-is/retrieval-augmented-generation/) principles.
 
-1. Clone the repository
+- **LLM via Gemini API**  
+  Uses [Google Gemini](https://gemini.google.com/app) for generating intelligent, context-aware responses.
+
+## 🛠️ Tech Stack
+
+- React  
+- Next.js  
+- JavaScript  
+- Pinecone  
+- REST APIs  
+- LLM (Large Language Models)
+
+## 🔐 Environment Variables
+
+Create a `.env` file in the `AI-CUSTOMER-AGENT` directory with the following values:
+
+```env
+VAPI_PRIVATE_KEY=your_vapi_private_api_key_here
+VAPI_PUBLIC_KEY=your_vapi_public_api_key_here
+VAPI_ASSISTANT_ID=your_vapi_assistant_id_here
+OPENAI_API_KEY=your_openai_api_key_here
+GOOGLE_API_KEY=your_google_api_key_here
+FIRECRAWL_API_KEY=your_firecrawl_api_key_here
+PINECONE_API_KEY=your_pinecone_api_key_here
+```
+## 📦 Installation
+
+Follow these steps to install and run the project locally:
+
+1. Clone the repository:
+   
+```
+git clone https://github.com/your-username/ai-customer-support-agent.git
+cd ai-customer-support-agent
+```
+
 2. Install dependencies:
-
-```bash
+```
 npm install
 # or
 yarn install
-# or
-pnpm install
 ```
 
-3. Set up your environment variables in the `.env` file.
+3. Add environment variables:
 
-4. Start the development server:
+Create a .env file in the root directory and copy the environment variable keys from above.
 
-```bash
+4. Run the development server:
+
+```
 npm run dev
 # or
 yarn dev
@@ -42,26 +74,14 @@ yarn dev
 pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the application.
+5. Visit your app:
 
-## Project Structure
+Open your browser and go to http://localhost:3000
 
-- `app/page.tsx` - Main page with Todo list implementation
-- `app/example/page.tsx` - Data fetching example with loading states
-- `app/actions/*` - Server Actions for data mutations
-- `components/ui/*` - Shadcn UI components
+## 🧠 Future Improvements
+- Preprocess and clean scraped content
 
-## Learn More
+- Chunk content into smaller segments before embedding into Pinecone
 
-To learn more about the technologies used in this project:
 
-- [Next.js Documentation](https://nextjs.org/docs) - Next.js features and API
-- [Server Actions](https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions) - Learn about Next.js Server Actions
-- [Shadcn UI Documentation](https://ui.shadcn.com) - Learn about Shadcn UI components
-- [Tailwind CSS Documentation](https://tailwindcss.com/docs) - Learn about Tailwind CSS
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme).
-
-Check out the [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
